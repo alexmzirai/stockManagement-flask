@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -18,7 +18,7 @@ class Item(db.Model):
 
 @app.route('/')
 @app.route('/<name>')
-def welcome_page(name=None):
+def welcome_page(name="Flask Warehouse"):
     return render_template('index.html', name=name)
 
 
@@ -36,6 +36,18 @@ def view_product_by_id(pid):
 
 @app.route('/product/add')
 def add_product():
+    return render_template('add_product.html')
+
+
+@app.route('/add/product', methods=['POST'])
+def add_product_form():
+    name = request.form['name']
+    qty = request.form['qty']
+    storage = request.form['storage']
+
+    admin = Item(name, storage, qty)
+    db.session.add(admin)
+    db.session.commit()
     return render_template('add_product.html')
 
 
