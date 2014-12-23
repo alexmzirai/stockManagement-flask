@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.security import Security, SQLAlchemyUserDatastore, \
-    UserMixin, RoleMixin, login_required, logout_user
+    UserMixin, RoleMixin, login_required, logout_user, roles_accepted
 import models.Item
 
 app = Flask(__name__)
@@ -9,6 +9,11 @@ app.config['DEBUG'] = True
 # Configure Flask-SQLAlchemy - sqlite
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///item.db'
 app.config['SECRET_KEY'] = 'super-secret'
+
+app.config['SECURITY_REGISTERABLE'] = True
+app.config['SECURITY_SEND_REGISTER_EMAIL'] = False
+app.config['SECURITY_POST_REGISTER_VIEW'] = '/'
+app.config['SECURITY_UNAUTHORIZED_VIEW'] = '/product/all'
 db = SQLAlchemy(app)
 
 # Define models
@@ -63,7 +68,7 @@ def view_product_by_id(pid):
 
 
 @app.route('/product/add')
-@login_required
+@roles_accepted('admin')
 def add_product():
     return render_template('add_product.html')
 
