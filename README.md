@@ -8,8 +8,13 @@ The reason I created this application was to play with python and the flask fram
 Stack
 ----------
 Python3
+
 Flask
+
 Flask-SQLAlchemy (SQLite)
+
 Flask-Security
+
 Flask-Testing
+
 Jinja2
